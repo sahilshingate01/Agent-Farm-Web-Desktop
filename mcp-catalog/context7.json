@@ -1,0 +1,12 @@
+{
+  "id": "context7",
+  "name": "Context7",
+  "description": "Up-to-date library documentation via npx (works in Linux containers)",
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "coding",
+  "description": "General software work — Vercel agent-skills + common host toolkit",
+  "skills_packages": [
+    {
+      "source": "vercel-labs/agent-skills",
+      "skills": ["*"]
+    }
+  ],
+  "skills_from_host": [
+    "diagnose",
+    "tdd",
+    "review",
+    "systematic-debugging",
+    "verification-before-completion",
+    "writing-plans",
+    "executing-plans"
+  ],
+  "agents_from_host": [
+    "architect",
+    "debug-specialist",
+    "code-review-expert",
+    "api-designer"
+  ],
+  "commands_from_host": [
+    "debug",
+    "explore-plan-code-test"
+  ],
+  "mcp": ["context7"]
+}

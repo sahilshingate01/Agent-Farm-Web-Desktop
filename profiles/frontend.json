@@ -1,0 +1,29 @@
+{
+  "name": "frontend",
+  "description": "UI / React / Next work — design + web skills and MCP",
+  "skills_packages": [
+    {
+      "source": "vercel-labs/agent-skills",
+      "skills": ["*"]
+    }
+  ],
+  "skills_from_host": [
+    "frontend-design",
+    "design-taste-frontend",
+    "web-design-guidelines",
+    "vercel-react-best-practices",
+    "shadcn",
+    "diagnose",
+    "tdd"
+  ],
+  "agents_from_host": [
+    "architect",
+    "code-review-expert",
+    "ai-elements-expert"
+  ],
+  "commands_from_host": [
+    "debug",
+    "web-interface-guidelines"
+  ],
+  "mcp": ["context7", "playwright"]
+}

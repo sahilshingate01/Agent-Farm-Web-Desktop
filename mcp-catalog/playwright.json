@@ -1,0 +1,12 @@
+{
+  "id": "playwright",
+  "name": "Playwright",
+  "description": "Browser automation MCP via npx (works in Linux containers; first run downloads browsers)",
+  "mcpServers": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    }
+  }
+}

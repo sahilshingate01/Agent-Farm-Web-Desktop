@@ -1,0 +1,12 @@
+{
+  "id": "filesystem",
+  "name": "Filesystem",
+  "description": "Scoped filesystem MCP over the shared farm work directory",
+  "mcpServers": {
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${FARM_WORK}"]
+    }
+  }
+}
