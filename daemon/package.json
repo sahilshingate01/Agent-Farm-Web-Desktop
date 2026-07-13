@@ -1,0 +1,28 @@
+{
+  "name": "@agensis/farm",
+  "version": "0.1.0",
+  "description": "Portable control plane for local, remote, and managed Agensis agent silos",
+  "author": "Sahil Shingate",
+  "homepage": "https://github.com/sahilshingate01/Agent-Farm-Web-Desktop",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahilshingate01/Agent-Farm-Web-Desktop.git"
+  },
+  "type": "module",
+  "bin": {
+    "farm": "bin/farm.mjs",
+    "farmd": "bin/farmd.mjs"
+  },
+  "scripts": {
+    "check": "node --check bin/farm.mjs && node --check bin/farmd.mjs && node --check src/*.mjs && node --check src/runtimes/*.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@daytona/sdk": "^0.202.0",
+    "e2b": "^2.32.0"
+  },
+  "license": "AGPL-3.0-or-later"
+}
