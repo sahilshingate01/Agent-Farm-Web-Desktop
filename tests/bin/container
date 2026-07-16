@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# fake Apple `container` CLI for tests — state lives in $CONTAINER_SHIM_DIR:
+#   system-up            flag file: `container system status` succeeds
+#   fail-start           flag file: `container system start` fails
+#   containers-all.txt   one container name per line (exists, any state)
+#   containers-running.txt  one name per line (running)
+#   missing-cmds.txt     commands `container exec ... command -v X` reports missing
+#   calls.log            every invocation, one line per call
+set -u
+DIR="${CONTAINER_SHIM_DIR:?CONTAINER_SHIM_DIR not set}"
+echo "$*" >> "$DIR/calls.log"
+
+remove_line() { # file line
+  [ -f "$1" ] || return 0
+  grep -Fxv "$2" "$1" > "$1.tmp" || true
+  mv "$1.tmp" "$1"
+}
+
+case "${1:-} ${2:-}" in
+  "system status")
+    [ -f "$DIR/system-up" ]
+    exit $?
+    ;;
+  "system start")
+    if [ -f "$DIR/fail-start" ]; then
+      echo "shim: cannot start" >&2
+      exit 1
+    fi
+    touch "$DIR/system-up"
+    exit 0
+    ;;
+esac
+
+case "${1:-}" in
+  list)
+    echo "ID  IMAGE  STATE"
+    if [ "${2:-}" = "-a" ]; then
+      cat "$DIR/containers-all.txt" 2>/dev/null || true
+    else
+      cat "$DIR/containers-running.txt" 2>/dev/null || true
+    fi
+    exit 0
+    ;;
+  run)
+    # find --name value; record container as existing + running
+    name=""
+    prev=""
+    for arg in "$@"; do
+      [ "$prev" = "--name" ] && name="$arg"
+      prev="$arg"
+    done
+    [ -n "$name" ] && { echo "$name" >> "$DIR/containers-all.txt"; echo "$name" >> "$DIR/containers-running.txt"; }
+    exit 0
+    ;;
+  stop)
+    remove_line "$DIR/containers-running.txt" "${2:-}"
+    exit 0
+    ;;
+  delete)
+    remove_line "$DIR/containers-running.txt" "${2:-}"
+    remove_line "$DIR/containers-all.txt" "${2:-}"
+    exit 0
+    ;;
+  exec)
+    # `command -v 'X'` probe: fail if X is listed in missing-cmds.txt
+    if [ -f "$DIR/missing-cmds.txt" ]; then
+      while IFS= read -r miss; do
+        [ -n "$miss" ] || continue
+        case "$*" in
+          *"command -v '$miss'"*) exit 1 ;;
+        esac
+      done < "$DIR/missing-cmds.txt"
+    fi
+    exit 0
+    ;;
+  build)
+    exit 0
+    ;;
+esac
+
+exit 0
