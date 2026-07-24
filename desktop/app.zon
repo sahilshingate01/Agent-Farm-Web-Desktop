@@ -1,0 +1,32 @@
+.{
+    .id ="dev.usage-farm.desktop",
+    .name ="usage-farm",
+    .display_name ="Agensis Farm",
+    .version = "0.1.0",
+    .icons = .{ "assets/icon.png" },
+    .platforms = .{ "macos", "linux" },
+    .permissions = .{},
+    .capabilities = .{ "webview", "js_bridge" },
+    .frontend = .{
+        .dist ="frontend/dist",
+        .entry = "index.html",
+        .spa_fallback = true,
+        .dev = .{
+            .url ="http://127.0.0.1:7417/",
+            .command = .{ "npm", "--prefix", "frontend", "run", "dev", "--", "--host", "127.0.0.1" },
+            .ready_path = "/",
+            .timeout_ms = 30000,
+        },
+    },
+    .security = .{
+        .navigation = .{
+            .allowed_origins = .{ "zero://app", "zero://inline", "http://127.0.0.1:7417" },
+            .external_links = .{ .action = "deny" },
+        },
+    },
+    .web_engine = "system",
+    .cef = .{ .dir = "third_party/cef/macos", .auto_install = false },
+    .windows = .{
+        .{ .label = "main", .title ="Agensis Farm", .width = 1280, .height = 820, .restore_state = true, .titlebar = "hidden_inset_tall" },
+    },
+}
