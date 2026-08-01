@@ -1,0 +1,1747 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/work-sans";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource/ibm-plex-mono";
+@import "@fontsource/space-mono";
+@import "tailwindcss";
+/* Streamdown (and its Shiki code plugin) ship utility classes only inside
+   node_modules — without @source, language headers, token colors, and the
+   action-row overlay (-mt-10) never make it into the built CSS. */
+@source "../node_modules/streamdown/dist/*.js";
+@source "../node_modules/@streamdown/code/dist/*.js";
+@source inline("-mt-10");
+@import "streamdown/styles.css";
+@import "./editor-ok/editor.css";
+
+.visual-todo-panel {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 5.5rem;
+  z-index: 99990;
+  width: min(22rem, calc(100vw - 3rem));
+  max-height: min(50vh, 30rem);
+  overflow: hidden;
+  border: 1px solid var(--visual-todo-tint-border);
+  border-radius: 0.75rem;
+  background: var(--visual-todo-tint-bg);
+  box-shadow: 0 18px 45px
+    color-mix(in srgb, var(--visual-todo-tint-color) 22%, transparent);
+  backdrop-filter: blur(14px) saturate(1.12);
+  pointer-events: auto;
+}
+
+.visual-todo-panel-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid var(--visual-todo-tint-border);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.visual-todo-filter {
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.visual-todo-filter:hover,
+.visual-todo-filter[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--visual-todo-tint-color) 14%, transparent);
+  color: var(--visual-todo-tint-color);
+}
+
+.visual-todo-filter svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.visual-todo-filter-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0.55rem;
+  z-index: 3;
+  display: grid;
+  min-width: 10rem;
+  padding: 0.25rem;
+  border: 1px solid var(--visual-todo-tint-border);
+  border-radius: 0.55rem;
+  background: var(--card, #fff);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.visual-todo-filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0.5rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.7rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.visual-todo-filter-option:hover,
+.visual-todo-filter-option-active {
+  background: color-mix(in srgb, var(--visual-todo-tint-color) 12%, transparent);
+  color: var(--visual-todo-tint-color);
+}
+
+.visual-todo-filter-option > span:last-child {
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.visual-todo-panel-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.visual-todo-panel-collapsed {
+  width: auto;
+  min-width: 3.25rem;
+  border-radius: 999px;
+}
+
+.visual-todo-panel-collapsed .visual-todo-panel-header {
+  border-bottom: 0;
+  padding: 0.55rem 0.75rem;
+}
+
+.visual-todo-panel-collapsed .visual-todo-panel-toggle {
+  justify-content: center;
+}
+
+.visual-todo-panel-collapsed .visual-todo-panel-toggle > span:first-child {
+  display: none;
+}
+
+.visual-todo-count {
+  color: var(--visual-todo-tint-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.visual-todo-list {
+  max-height: min(42vh, 25rem);
+  overflow-y: auto;
+  padding: 0.35rem;
+}
+
+.visual-todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.45rem;
+  border-radius: 0.5rem;
+}
+
+.visual-todo-item:hover {
+  background: color-mix(in srgb, var(--visual-todo-tint-color) 10%, var(--muted));
+}
+
+.visual-todo-status,
+.visual-todo-remove {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--visual-todo-tint-color);
+  cursor: pointer;
+}
+
+.visual-todo-status {
+  width: 2.45rem;
+}
+
+.visual-todo-stage-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.visual-todo-stage-indicator > span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 0.48rem;
+  height: 0.48rem;
+  overflow: hidden;
+  border: 1px solid
+    color-mix(in srgb, var(--visual-todo-tint-color) 36%, var(--border));
+  border-radius: 999px;
+  background: transparent;
+}
+
+.visual-todo-stage-indicator > span.is-reached {
+  border-color: var(--visual-todo-tint-color);
+  background: var(--visual-todo-tint-color);
+}
+
+.visual-todo-stage-queued > span:first-child::after {
+  position: absolute;
+  inset: -100% -200%;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.9) 50%,
+    transparent 65%
+  );
+  content: "";
+  animation: visual-todo-stage-shimmer 1.15s linear infinite;
+}
+
+.visual-todo-stage-indicator svg {
+  width: 0.4rem;
+  height: 0.4rem;
+  color: var(--primary-foreground);
+  stroke-width: 3;
+}
+
+.visual-todo-stage-in-progress > span:nth-child(2) {
+  width: 0.62rem;
+  height: 0.62rem;
+  animation: visual-todo-stage-pulse 1.2s ease-in-out infinite;
+}
+
+.visual-todo-stage-in-progress > span:nth-child(2) svg {
+  animation: visual-todo-stage-spin 0.7s linear infinite;
+}
+
+@keyframes visual-todo-stage-shimmer {
+  to {
+    transform: translateX(50%);
+  }
+}
+
+@keyframes visual-todo-stage-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes visual-todo-stage-pulse {
+  50% {
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--visual-todo-tint-color) 18%, transparent);
+  }
+}
+
+.visual-todo-status svg,
+.visual-todo-remove svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.visual-todo-status:hover,
+.visual-todo-remove:hover {
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--foreground);
+}
+
+.visual-todo-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.visual-todo-copy p {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.visual-todo-copy small {
+  display: block;
+  margin-top: 0.15rem;
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.65rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visual-todo-in-progress .visual-todo-status {
+  color: #f59e0b;
+}
+
+.visual-todo-in-progress {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--visual-todo-tint-color) 34%, transparent);
+  background: color-mix(in srgb, var(--visual-todo-tint-color) 14%, var(--card));
+  box-shadow:
+    inset 3px 0 0 var(--visual-todo-tint-color),
+    0 4px 16px color-mix(in srgb, var(--visual-todo-tint-color) 10%, transparent);
+}
+
+.visual-todo-in-progress::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    color-mix(in srgb, var(--visual-todo-tint-color) 10%, transparent) 48%,
+    transparent 70%
+  );
+  content: "";
+  pointer-events: none;
+  animation: visual-todo-active-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes visual-todo-active-shimmer {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
+  }
+}
+
+.visual-todo-done .visual-todo-status {
+  color: #16a34a;
+}
+
+.visual-todo-done .visual-todo-copy p {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+}
+
+.visual-todo-widget-error {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 100000;
+  display: grid;
+  gap: 0.35rem;
+  width: min(20rem, calc(100vw - 3rem));
+  padding: 0.8rem;
+  border: 1px solid color-mix(in srgb, #ef4444 45%, var(--border));
+  border-radius: 0.75rem;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 18px 45px color-mix(in srgb, var(--foreground) 14%, transparent);
+  font-size: 0.72rem;
+  pointer-events: auto;
+}
+
+.visual-todo-widget-error span {
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.visual-todo-widget-error button {
+  justify-self: start;
+  margin-top: 0.25rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--background);
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2-variations");
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/* Palette ported verbatim from OpenKnowledge desktop (the design target —
+   packages/app/src/globals.css :root/.dark), azure primary included. */
+:root {
+  --agensis-titlebar-reserve-left: 0px;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.6321 0.1983 259.59); /* azure-500 #3784ff family */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --success: oklch(0.58 0.14 145);
+  --signal: #e37a5c;
+  /* Categorical graph/chart scale — 1-5 ported verbatim from OK's
+     --chart-* palette; 6-8 extend the same lightness/chroma pattern so the
+     topology + wiki graphs can color 7 node kinds plus folder hues. */
+  --chart-1: oklch(0.62 0.19 259);
+  --chart-2: oklch(0.58 0.14 145);
+  --chart-3: oklch(0.62 0.15 70);
+  --chart-4: oklch(0.55 0.18 290);
+  --chart-5: oklch(0.58 0.21 25);
+  --chart-6: oklch(0.6 0.12 200);
+  --chart-7: oklch(0.6 0.15 330);
+  --chart-8: oklch(0.6 0.11 170);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --font-ui:
+    "Inter Variable", "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-secondary:
+    "JetBrains Mono Variable", "Geist Mono", "SF Mono", ui-monospace, Menlo,
+    Consolas, monospace;
+  --font-mono:
+    "JetBrains Mono Variable", "Geist Mono", "SF Mono", ui-monospace, Menlo,
+    Consolas, monospace;
+  --ui-font-size: 14px;
+  --code-font-size: 10px;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: #69a3ff; /* OK sky-blue */
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.205 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --success: oklch(0.73 0.13 145);
+  --signal: #e58a70;
+  /* Dark chart scale — OK's dark --chart-* values, extended 6-8 to match. */
+  --chart-1: oklch(0.72 0.14 259);
+  --chart-2: oklch(0.73 0.13 145);
+  --chart-3: oklch(0.77 0.14 70);
+  --chart-4: oklch(0.72 0.16 290);
+  --chart-5: oklch(0.72 0.2 25);
+  --chart-6: oklch(0.75 0.11 200);
+  --chart-7: oklch(0.75 0.14 330);
+  --chart-8: oklch(0.75 0.1 170);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+}
+
+/* Theme presets — accent + a whisper of surface tint over the OK-verbatim
+   base. Default (no attribute) stays the azure OK palette; each preset
+   overrides both modes so the light/dark toggle keeps working. */
+html[data-app-theme="meadow"] {
+  --primary: oklch(0.55 0.15 150);
+  --ring: oklch(0.68 0.1 150);
+  --background: oklch(0.995 0.004 150);
+  --sidebar: oklch(0.978 0.006 150);
+}
+html[data-app-theme="meadow"].dark {
+  --primary: oklch(0.76 0.14 152);
+  --primary-foreground: oklch(0.205 0 0);
+  --background: oklch(0.148 0.008 155);
+  --card: oklch(0.208 0.009 155);
+  --popover: oklch(0.208 0.009 155);
+  --sidebar: oklch(0.208 0.009 155);
+}
+html[data-app-theme="harvest"] {
+  --primary: oklch(0.6 0.13 65);
+  --ring: oklch(0.72 0.09 70);
+  --background: oklch(0.995 0.005 85);
+  --sidebar: oklch(0.978 0.008 85);
+}
+html[data-app-theme="harvest"].dark {
+  --primary: oklch(0.79 0.13 75);
+  --primary-foreground: oklch(0.205 0 0);
+  --background: oklch(0.15 0.008 70);
+  --card: oklch(0.21 0.01 70);
+  --popover: oklch(0.21 0.01 70);
+  --sidebar: oklch(0.21 0.01 70);
+}
+html[data-app-theme="dusk"] {
+  --primary: oklch(0.55 0.2 295);
+  --ring: oklch(0.68 0.12 295);
+  --background: oklch(0.995 0.004 300);
+  --sidebar: oklch(0.978 0.007 300);
+}
+html[data-app-theme="dusk"].dark {
+  --primary: oklch(0.74 0.16 295);
+  --primary-foreground: oklch(0.205 0 0);
+  --background: oklch(0.146 0.012 300);
+  --card: oklch(0.206 0.014 300);
+  --popover: oklch(0.206 0.014 300);
+  --sidebar: oklch(0.206 0.014 300);
+}
+html[data-app-theme="clay"] {
+  --primary: oklch(0.58 0.16 30);
+  --ring: oklch(0.7 0.1 30);
+  --background: oklch(0.995 0.004 40);
+  --sidebar: oklch(0.978 0.007 40);
+}
+html[data-app-theme="clay"].dark {
+  --primary: oklch(0.75 0.13 35);
+  --primary-foreground: oklch(0.205 0 0);
+  --background: oklch(0.15 0.008 35);
+  --card: oklch(0.21 0.009 35);
+  --popover: oklch(0.21 0.009 35);
+  --sidebar: oklch(0.21 0.009 35);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-signal: var(--signal);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-border: var(--sidebar-border);
+  /* OK's multiplicative radius scale */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ui);
+  font-size: var(--ui-font-size);
+  text-rendering: optimizeLegibility;
+}
+
+html.native-shell {
+  --agensis-titlebar-reserve-left: 78px;
+  background: transparent;
+}
+
+html.native-shell body,
+html.native-shell #root {
+  background: transparent;
+}
+
+body {
+  min-width: 980px;
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  background: var(--background);
+}
+
+/* In @layer base so Tailwind weight/size utilities still win — an unlayered
+   `font: inherit` here silently stripped font-medium/semibold from every
+   <button> app-wide (same unlayered-beats-utilities trap as the old
+   .font-mono size coupling). */
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+[role="button"]:active {
+  transform: translateY(1px);
+}
+
+/* .flat-input opts out: inline fields living inside already-chromed
+   containers (command palettes, the floating AI pill) — a second focus box
+   there reads as broken framing, and the container itself is the focus cue. */
+button:focus-visible,
+input:focus-visible:not(.flat-input),
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--ring) 72%, transparent);
+  outline-offset: 1px;
+}
+
+.prompt-input textarea:focus-visible {
+  outline: none;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+
+/* Type tiers — the ONLY text styles in the app (design-language skill).
+   Rem-based so the Interface-size setting scales everything; px shown at
+   the 14px default root. In @layer components so single utilities (e.g.
+   text-primary on an accent label) can still override a tier property. */
+@layer components {
+  .type-display {
+    /* wordmark only — brand spec (docs/brand-agent-farm.md): Space Grotesk
+       700 at -0.03em; sidebar scale is 24px, subtitle carried separately */
+    font-family: "Manrope Variable", "Manrope", var(--font-ui);
+    font-size: 1.714rem; /* 24px */
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+  .type-title {
+    font-size: 1.857rem; /* 26px */
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+  .type-heading {
+    font-size: 1.143rem; /* 16px */
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .type-body {
+    font-size: 1rem; /* 14px */
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .type-list {
+    /* Base interface size (Sahil Shingate, 2026-07-16): list titles, tabs, and menu
+       rows read at the sidebar's 1rem — 12px made them "smaller than
+       everything else". Secondary text is type-caption; compressed markers
+       are type-label; both sit at 0.857rem relative to this. */
+    font-size: 1rem; /* 14px */
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .type-caption {
+    font-size: 0.857rem; /* 12px */
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+  }
+  /* Panel depth: quiet two-layer elevation for top-level cards. Dark mode
+     leans on a stronger drop since borders carry less contrast there. */
+  .panel-depth {
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.06),
+      0 2px 6px rgb(0 0 0 / 0.05),
+      0 10px 24px -10px rgb(0 0 0 / 0.12);
+  }
+  .dark .panel-depth {
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.3),
+      0 8px 20px -10px rgb(0 0 0 / 0.45);
+  }
+
+  .type-label {
+    font-family: var(--font-secondary);
+    font-size: 0.857rem; /* 12px */
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    color: var(--muted-foreground);
+  }
+  .type-code {
+    font-family: var(--font-mono);
+    font-size: var(--code-font-size);
+  }
+}
+
+/* Family only — code sizing lives in .type-code and the code/pre/kbd/samp
+   base rule, never on labels (design-language prerequisite fix). */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.workspace-nav-item {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 2.125rem;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: var(--radius-md);
+  padding: 0 0.7rem;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.workspace-nav-item:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.workspace-nav-item svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Kbd hints are quiet until ⌘/Ctrl is held — App stamps the root attribute
+   on modifier keydown/keyup (Codex/Linear behavior). Opacity, not display,
+   so nothing reflows when hints appear. */
+kbd {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+html[data-modifier-held] kbd {
+  opacity: 1;
+}
+
+.workspace-rail {
+  -webkit-user-select: none;
+  user-select: none;
+  /* Codex-style soft wash: sidebar deepens slightly toward the bottom.
+     Token-derived so it tracks both themes; replaces the flat bg-sidebar
+     paint (the utility still sets the fallback background-color). */
+  background-image: linear-gradient(
+    180deg,
+    var(--sidebar) 0%,
+    var(--sidebar) 55%,
+    color-mix(in oklab, var(--sidebar) 93%, var(--foreground) 7%) 100%
+  );
+}
+
+.workspace-rail input,
+.workspace-rail textarea,
+.workspace-rail [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.workspace-sidebar-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.workspace-sidebar-section {
+  min-width: 0;
+}
+
+.workspace-sidebar-section-header {
+  display: flex;
+  min-width: 0;
+  min-height: 2.125rem;
+  align-items: center;
+}
+
+.workspace-sidebar-nav-control {
+  flex: 1 1 auto;
+}
+
+.workspace-sidebar-disclosure {
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted-foreground);
+}
+
+.workspace-sidebar-disclosure:hover {
+  background: transparent;
+  color: var(--foreground);
+}
+
+.workspace-sidebar-section-actions {
+  display: flex;
+  width: 3.25rem;
+  flex: 0 0 3.25rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.125rem;
+}
+
+/* OK-scale sidebar glyphs: icons at the 4.5 grid step (~16px), chevrons a
+   touch smaller. Lucide icons ship a 24px intrinsic size — the svg rule is
+   load-bearing, without it they overflow the slot and paint over labels. */
+.workspace-sidebar-icon-slot {
+  display: grid;
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 1.125rem;
+  place-items: center;
+}
+.workspace-sidebar-icon-slot svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.workspace-sidebar-chevron-slot {
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+  place-items: center;
+}
+.workspace-sidebar-chevron-slot svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.workspace-sidebar-section-content {
+  display: flex;
+  min-width: 0;
+  margin-left: 0.75rem;
+  flex-direction: column;
+  gap: 0.125rem;
+  border-left: 1px solid var(--border);
+  padding-left: 0.25rem;
+}
+
+.workspace-sidebar-section-content[hidden] {
+  display: none;
+}
+
+.workspace-sidebar-leaf-row {
+  display: flex;
+  min-width: 0;
+  min-height: 2rem;
+  align-items: center;
+  border-radius: var(--radius-md);
+}
+
+.workspace-sidebar-leaf-row:hover {
+  background: var(--muted);
+}
+
+.workspace-sidebar-leaf-control {
+  display: flex;
+  min-width: 0;
+  min-height: 2rem;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0 0.5rem;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+}
+
+.workspace-sidebar-leaf-actions {
+  display: flex;
+  width: 1.75rem;
+  flex: 0 0 1.75rem;
+  align-items: center;
+  justify-content: center;
+}
+.brand-farm {
+  /* brand spec gradient: #5B7CFF → #8A6BFF → #C85ED8 */
+  background: linear-gradient(100deg, #5b7cff 0%, #8a6bff 50%, #c85ed8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.prompt-context-select {
+  height: 1.75rem;
+  min-width: 0;
+  max-width: 9rem;
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--background);
+  padding: 0 1.45rem 0 0.55rem;
+  color: var(--foreground);
+  font-size: 0.625rem;
+  font-weight: 550;
+  line-height: 1;
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+.prompt-context-select:hover {
+  background: var(--muted);
+}
+.prompt-context-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 16%, transparent);
+  outline: none;
+}
+
+.workspace-rail {
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  /* Opaque hairline. A 75%-transparent 1px inset shadow composites unevenly
+     against the rail's blurred backdrop on fractional display scaling, which
+     renders as a stippled/dotted edge rather than a line. Full opacity on the
+     token keeps it crisp at every DPR. */
+  box-shadow: inset -1px 0 var(--border);
+  backdrop-filter: blur(28px) saturate(1.18);
+  -webkit-backdrop-filter: blur(28px) saturate(1.18);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.workspace-rail button,
+.workspace-rail [role="button"],
+.workspace-rail svg,
+.drag-region,
+.native-window-drag-strip {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.agensis-shell {
+  background: var(--background);
+}
+
+.agensis-shell.is-native-shell {
+  background: transparent;
+}
+
+.agensis-shell > main {
+  background: var(--background);
+}
+
+.workspace-traffic-light-reserve {
+  width: var(--agensis-titlebar-reserve-left);
+}
+
+.native-window-drag-strip {
+  -webkit-app-region: drag;
+  pointer-events: none;
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  height: 0.5rem;
+}
+
+.global-command-palette {
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--popover) 96%, transparent);
+  box-shadow: 0 28px 80px color-mix(in srgb, #000 28%, transparent);
+  backdrop-filter: blur(28px) saturate(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.08);
+}
+
+.global-command-palette [cmdk-input] {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.global-command-palette [cmdk-input]:focus-visible {
+  outline: none;
+}
+
+.global-command-palette [cmdk-item] {
+  min-height: 2.75rem;
+  border-radius: 0.65rem;
+}
+.workspace-tab {
+  height: 1.875rem;
+  border-radius: 0.5rem;
+  padding: 0 0.75rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.workspace-tab:first-child {
+  margin-left: 0;
+}
+.workspace-tab[data-active="true"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 1px 2px color-mix(in srgb, #000 24%, transparent);
+}
+.workspace-tab:not([data-active="true"]):hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+.workspace-composer {
+  border-color: color-mix(in srgb, var(--border) 85%, transparent);
+  box-shadow: 0 14px 34px color-mix(in srgb, #000 16%, transparent);
+}
+.workspace-composer textarea {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.composer-hint {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 0.25rem 0.5rem;
+  color: color-mix(in srgb, var(--muted-foreground) 70%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 500ms ease-in-out;
+}
+.attachment-context-chip {
+  display: inline-flex;
+  max-width: 16rem;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--muted) 60%, transparent);
+  padding: 0.15rem 0.45rem 0.15rem 0.2rem;
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+}
+.attachment-context-remove {
+  position: relative;
+  display: grid;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.2rem;
+  color: var(--muted-foreground);
+}
+.attachment-context-remove:hover {
+  color: var(--foreground);
+}
+.attachment-context-icon,
+.attachment-context-x {
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  transition: opacity 150ms ease-out;
+}
+.attachment-context-x {
+  opacity: 0;
+}
+.group\/chip:hover .attachment-context-icon,
+.group\/chip:focus-within .attachment-context-icon {
+  opacity: 0;
+}
+.group\/chip:hover .attachment-context-x,
+.group\/chip:focus-within .attachment-context-x {
+  opacity: 1;
+}
+.agentic-file-sidebar {
+  background: color-mix(in srgb, var(--card) 96%, var(--background));
+}
+/* Wiki tree rows run at body size, matching the main sidebar (see
+   design-language: small+light tree content reads as "a different font").
+   Files weight 400, folders 500; active rows highlight via fill only. */
+.agentic-file-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.45rem;
+  padding: 0.42rem 0.55rem;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+.agentic-file-row:hover {
+  background: var(--muted);
+  color: var(--foreground);
+}
+.agentic-file-row-active {
+  background: var(--accent);
+  color: var(--foreground);
+}
+.agentic-file-folder {
+  color: var(--foreground);
+  font-weight: 500;
+}
+.agentic-file-search {
+  display: flex;
+  height: 2.2rem;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0 0.55rem;
+  color: var(--muted-foreground);
+}
+.agentic-file-search:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 18%, transparent);
+}
+.agentic-file-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 1rem;
+}
+.agentic-session-search {
+  display: flex;
+  height: 1.85rem;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  padding: 0 0.5rem;
+  color: var(--muted-foreground);
+}
+.agentic-session-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 0.625rem;
+}
+.agentic-session-filter {
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.4rem;
+  color: var(--muted-foreground);
+  font-size: 0.625rem;
+}
+.agentic-session-filter:hover,
+.agentic-session-filter-active {
+  background: var(--accent);
+  color: var(--foreground);
+}
+.agentic-source-editor {
+  display: block;
+  min-height: 100%;
+  width: 100%;
+  resize: none;
+  border: 0;
+  background: transparent;
+  padding: 2.5rem 3rem;
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  outline: none;
+}
+.agentic-markdown {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+.agentic-markdown :is(h1, h2, h3) {
+  margin-top: 1.75em;
+  margin-bottom: 0.5em;
+  font-weight: 650;
+  letter-spacing: -0.018em;
+}
+.agentic-markdown :is(p, ul, ol, pre, blockquote) {
+  margin: 0.8em 0;
+}
+.agentic-markdown pre {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--muted);
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+/* Streamdown fenced code / mermaid blocks: language title + action icons
+   (download / copy) must share one header row. Upstream places the actions
+   in a sticky sibling with `-mt-10` to overlay the language row, but that
+   utility is not emitted by our Tailwind scan of app sources — without it
+   the icons drop onto a second row under "bash". Use grid so the row is
+   correct regardless of which negative-margin utilities ship. */
+[data-streamdown="code-block"],
+[data-streamdown="mermaid-block"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
+  align-items: center;
+}
+
+[data-streamdown="code-block-header"],
+[data-streamdown="mermaid-block"] > div:first-child {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+[data-streamdown="code-block"] > div:has(> [data-streamdown="code-block-actions"]),
+[data-streamdown="mermaid-block"] > div:has(> [data-streamdown="mermaid-block-actions"]) {
+  grid-column: 2;
+  grid-row: 1;
+  position: static;
+  top: auto;
+  z-index: auto;
+  margin-top: 0;
+  height: auto;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+[data-streamdown="code-block-body"],
+[data-streamdown="code-block"] > :not([data-streamdown="code-block-header"]):not(:has(> [data-streamdown="code-block-actions"])),
+[data-streamdown="mermaid-block"] > :not(:first-child):not(:has(> [data-streamdown="mermaid-block-actions"])) {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+}
+
+/* Streamdown already frames the body; don't double-pad/border the nested pre. */
+.agentic-markdown [data-streamdown="code-block"] pre,
+.agentic-markdown [data-streamdown="code-block-body"] pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+/* Tables: Streamdown ships `th { white-space: nowrap }` which, with long path
+   cells, collapses the first columns into empty-looking slabs and leaves the
+   last column wrapping alone. Prefer readable multi-line cells + scroll. */
+.farm-streamdown [data-streamdown="table-wrapper"],
+.agentic-markdown [data-streamdown="table-wrapper"] {
+  margin: 1.1rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  -webkit-overflow-scrolling: touch;
+}
+
+.farm-streamdown [data-streamdown="table"],
+.agentic-markdown [data-streamdown="table"] {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.farm-streamdown [data-streamdown="table-header"],
+.agentic-markdown [data-streamdown="table-header"] {
+  background: color-mix(in srgb, var(--muted) 72%, transparent);
+}
+
+.farm-streamdown [data-streamdown="table-header-cell"],
+.agentic-markdown [data-streamdown="table-header-cell"],
+.farm-streamdown [data-streamdown="table-cell"],
+.agentic-markdown [data-streamdown="table-cell"] {
+  white-space: normal;
+  vertical-align: top;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.farm-streamdown [data-streamdown="table-header-cell"],
+.agentic-markdown [data-streamdown="table-header-cell"] {
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted-foreground);
+}
+
+.farm-streamdown [data-streamdown="table-row"]:last-child [data-streamdown="table-cell"],
+.agentic-markdown [data-streamdown="table-row"]:last-child [data-streamdown="table-cell"] {
+  border-bottom: 0;
+}
+
+.farm-streamdown [data-streamdown="table-cell"] code,
+.agentic-markdown [data-streamdown="table-cell"] code {
+  word-break: break-all;
+  white-space: normal;
+}
+
+.farm-streamdown [data-streamdown="table-cell"]:first-child,
+.agentic-markdown [data-streamdown="table-cell"]:first-child,
+.farm-streamdown [data-streamdown="table-header-cell"]:first-child,
+.agentic-markdown [data-streamdown="table-header-cell"]:first-child {
+  min-width: 7.5rem;
+  font-weight: 550;
+  color: var(--foreground);
+}
+
+/* ASCII diagrams: no Shiki chrome, honest monospace metrics */
+.farm-streamdown .ascii-diagram,
+.agentic-markdown .ascii-diagram {
+  scrollbar-width: thin;
+}
+
+.farm-streamdown [data-streamdown="image"],
+.agentic-markdown [data-streamdown="image"] {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
+}
+
+/* Full-file code documents (Claude workflows, JSON agents, shell scripts):
+   stretch the fence to the full editor column — no max-width card. */
+.code-document-source {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.code-document-source [data-streamdown="code-block"] {
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 100%;
+  max-width: none;
+}
+.code-document-source [data-streamdown="code-block-header"] {
+  font-size: 0.75rem;
+  text-transform: lowercase;
+}
+.code-document-source [data-streamdown="code-block-body"] {
+  width: 100%;
+  max-width: none;
+}
+
+.workspace-new-session {
+  display: flex;
+  height: 2.15rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0 0.65rem;
+  color: var(--muted-foreground);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.workspace-new-session:hover {
+  border-color: color-mix(in srgb, var(--border) 86%, transparent);
+  background: color-mix(in srgb, var(--muted) 82%, transparent);
+  color: var(--foreground);
+}
+.workspace-split-pane {
+  position: relative;
+  display: flex;
+  min-width: 18rem;
+  flex-direction: column;
+}
+.workspace-split-resizer {
+  position: absolute;
+  z-index: 30;
+  inset-block: 0;
+  left: -3px;
+  width: 7px;
+  cursor: col-resize;
+  touch-action: none;
+}
+.workspace-split-resizer::after {
+  position: absolute;
+  inset-block: 0;
+  left: 3px;
+  width: 1px;
+  background: transparent;
+  content: "";
+  transition: background 120ms ease;
+}
+.workspace-split-resizer:hover::after,
+body[data-resizing="true"] .workspace-split-resizer::after {
+  background: var(--ring);
+}
+.workspace-split-resizer-horizontal {
+  inset-block: auto;
+  top: -3px;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  cursor: row-resize;
+}
+.workspace-split-resizer-horizontal::after {
+  top: 3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+.workspace-split-pane[data-dock-side="bottom"]
+  .workspace-split-resizer-horizontal {
+  top: -3px;
+}
+.workspace-split-pane[data-dock-side="top"]
+  .workspace-split-resizer-horizontal {
+  top: auto;
+  bottom: -3px;
+}
+/* A pane docked LEFT grabs from its right edge (the vertical default,
+   left: -3px, assumes a right-docked pane). */
+.workspace-split-pane[data-dock-side="left"]
+  .workspace-split-resizer:not(.workspace-split-resizer-horizontal) {
+  left: auto;
+  right: -3px;
+}
+.workspace-split-pane[data-dock-side="left"]
+  .workspace-split-resizer:not(.workspace-split-resizer-horizontal)::after {
+  left: auto;
+  right: 3px;
+}
+.workspace-split-pane > .border-b {
+  flex: 0 0 auto;
+}
+.element-chip {
+  border-radius: var(--radius-sm);
+  font-family: var(--font-secondary);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.workspace-project-menu {
+  border-radius: 0.875rem;
+  background: var(--popover);
+  box-shadow: 0 18px 42px color-mix(in srgb, #000 22%, transparent);
+}
+.workspace-project-menu-current {
+  padding: 0.5rem;
+}
+.workspace-project-menu-context {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  border-radius: 0.625rem;
+  background: var(--muted);
+  padding: 0.65rem 0.75rem;
+  font-size: 0.6875rem;
+}
+.workspace-project-menu-context span {
+  color: var(--muted-foreground);
+  font-size: 0.5625rem;
+}
+.workspace-account-list {
+  max-height: 13rem;
+  overflow-y: auto;
+  padding: 0.125rem 0;
+}
+.workspace-account-item {
+  min-height: 3rem;
+}
+
+.settings-shell {
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px color-mix(in srgb, #000 12%, transparent);
+}
+.settings-row {
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  font-size: 0.75rem;
+}
+.settings-row:last-child {
+  border-bottom: 0;
+}
+.settings-row span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.settings-row strong {
+  font-weight: 600;
+}
+.settings-row small {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+}
+.settings-row select {
+  min-width: 11rem;
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  background: var(--background);
+  padding: 0.45rem 0.65rem;
+  font-size: 0.75rem;
+}
+.settings-row code {
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+  font-size: 0.625rem;
+}
+.workspace-toast {
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 15%, transparent); /* float */
+}
+[data-slot="dialog-footer"] button {
+  font-family: var(--font-secondary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sidebar-resize-handle {
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  bottom: 0;
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.sidebar-resize-handle::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: transparent;
+  content: "";
+  transition: background-color 140ms ease;
+}
+
+.sidebar-resize-handle:hover::after {
+  background: var(--ring);
+}
+.sidebar-resize-handle-left {
+  right: -5px;
+}
+.sidebar-resize-handle-left::after {
+  left: 4px;
+}
+.sidebar-resize-handle-right {
+  left: -5px;
+}
+.sidebar-resize-handle-right::after {
+  right: 4px;
+}
+body[data-resizing] {
+  cursor: col-resize;
+  user-select: none;
+}
+
+html[data-ui-font="system"] {
+  --font-ui:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+html[data-ui-font="inter"] {
+  --font-ui:
+    "Inter Variable", "Geist Variable", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+html[data-ui-font="helvetica"] {
+  --font-ui: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+html[data-ui-font="space-grotesk"] {
+  --font-ui: "Space Grotesk Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-ui-font="manrope"] {
+  --font-ui: "Manrope Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-ui-font="dm-sans"] {
+  --font-ui: "DM Sans Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-ui-font="work-sans"] {
+  --font-ui: "Work Sans Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-ui-font="plus-jakarta"] {
+  --font-ui:
+    "Plus Jakarta Sans Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-mono-font="jetbrains"] {
+  --font-secondary:
+    "JetBrains Mono Variable", "Geist Mono", "SF Mono", ui-monospace, Menlo,
+    Consolas, monospace;
+  --font-mono:
+    "JetBrains Mono Variable", "JetBrains Mono", "SF Mono", ui-monospace, Menlo,
+    monospace;
+}
+html[data-mono-font="berkeley"] {
+  --font-secondary:
+    "JetBrains Mono Variable", "Geist Mono", "SF Mono", ui-monospace, Menlo,
+    Consolas, monospace;
+  --font-mono:
+    "Berkeley Mono", "BerkeleyMono", "SF Mono", ui-monospace, Menlo, monospace;
+}
+html[data-mono-font="sf-mono"] {
+  --font-mono: "SF Mono", "SFMono-Regular", ui-monospace, Menlo, monospace;
+}
+html[data-mono-font="menlo"] {
+  --font-mono: Menlo, Monaco, ui-monospace, monospace;
+}
+html[data-mono-font="ibm-plex"] {
+  --font-mono: "IBM Plex Mono", "Geist Mono", ui-monospace, monospace;
+}
+html[data-mono-font="space-mono"] {
+  --font-mono: "Space Mono", "Geist Mono", ui-monospace, monospace;
+}
+
+/* In @layer base so text-* utilities (and .type-code) win — unlayered this
+   made every inline <code> track the Code-size preference app-wide (the
+   design-language skill's "unlayered CSS beats utilities" bug class). */
+@layer base {
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+    font-size: var(--code-font-size);
+  }
+}
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.signal-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--primary) 0,
+    var(--primary) 8px,
+    transparent 8px,
+    transparent 14px
+  );
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pulse-dot {
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+
+  .enter-panel {
+    animation: enter-panel 240ms ease-out both;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+@keyframes enter-panel {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Secondary interface font — the compressed face for buttons and labels
+   (independent of the Code font). Defaults to JetBrains Mono. */
+html[data-secondary-font="jetbrains"] {
+  --font-secondary: "JetBrains Mono Variable", "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+}
+html[data-secondary-font="geist-mono"] {
+  --font-secondary: "Geist Mono", "SF Mono", ui-monospace, Menlo, monospace;
+}
+html[data-secondary-font="berkeley"] {
+  --font-secondary: "Berkeley Mono", "BerkeleyMono", "SF Mono", ui-monospace, Menlo, monospace;
+}
+html[data-secondary-font="ibm-plex"] {
+  --font-secondary: "IBM Plex Mono", "Geist Mono", ui-monospace, monospace;
+}
+html[data-secondary-font="space-mono"] {
+  --font-secondary: "Space Mono", "Geist Mono", ui-monospace, monospace;
+}
+html[data-secondary-font="space-grotesk"] {
+  --font-secondary: "Space Grotesk Variable", "Geist Variable", system-ui, sans-serif;
+}
+html[data-secondary-font="sf-mono"] {
+  --font-secondary: "SF Mono", "SFMono-Regular", ui-monospace, Menlo, monospace;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
