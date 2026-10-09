@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "name": "format",
+      "version": "0.2.2",
+      "license": "MIT",
+      "evidence": "Published package.json licenses field"
+    },
+    {
+      "name": "khroma",
+      "version": "2.1.0",
+      "license": "MIT",
+      "evidence": "Published package license file"
+    },
+    {
+      "name": "busboy",
+      "version": "1.6.0",
+      "license": "MIT",
+      "evidence": "Published package.json licenses field and LICENSE"
+    },
+    {
+      "name": "streamsearch",
+      "version": "1.1.0",
+      "license": "MIT",
+      "evidence": "Published package.json licenses field and LICENSE"
+    },
+    {
+      "name": "xmlhttprequest-ssl",
+      "version": "2.1.2",
+      "license": "MIT",
+      "evidence": "Published package.json licenses field and LICENSE"
+    }
+  ]
+}
